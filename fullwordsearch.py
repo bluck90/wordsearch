@@ -9,7 +9,10 @@ import numpy as np
 import nltk
 import copy
 
-wordsearch = 'doggo oogod gogdg oodgo dgood ododg ggodo'
+wordsearch = 'soiuatatuseocm ctdaotinahtaua roiuetnasievfn ucncoceuafmaau oaafkestgmoeam vtituidmrdaori atgcdsnurklrds litgngislksuvs fsifhfaoeoamai rhiekiluncrkro fvrriaiasttfkn edssrihacitnmo rovalfegutenoa iudceusoerseud'
+
+ws = wordsearch.split(' ')
+st = ["doggo", "oogod", "godgo"]
 
 # PART 1 - Find all English words in wordsearch
 
@@ -105,8 +108,8 @@ def diagonal_strings_up_left(wordsearch):
     strings = strings_from_coords(wordsearch, coords)
     return strings
 
-# combining all into set
-def wordsearch_strings_set(wordsearch):
+# combining all and making into set  with minimum number of letters per word
+def wordsearch_strings_set(wordsearch, num_letters):
     forwards = wordsearch
     backwards =  reverse_strings(forwards)
     upwards = upwards_strings(wordsearch)     
@@ -115,15 +118,16 @@ def wordsearch_strings_set(wordsearch):
     downleft = reverse_strings(upright)
     upleft = diagonal_strings_up_left(wordsearch)
     downright = reverse_strings(upleft)    
-    strings = forwards + backwards + upwards + downwards + upright + downleft + upleft + downright   
-    strings_set = {strings[h][i:j+i] for h in range(0, len(strings)) for j in range(3,len(strings[h])+1) for i in range(0, (len(strings[h])+1)-j)}
+    strings = forwards + backwards + upwards + downwards + upright + downleft + upleft + downright  
+    # separates the strings into strings of 3 or more letters
+    strings_set = {strings[h][i:j+i] for h in range(0, len(strings)) for j in range(num_letters,len(strings[h])+1) for i in range(0, (len(strings[h])+1)-j)}
     return strings_set
 
 # Find real words in the string set
-def realsolutions(wordsearch):
+def realsolutions(wordsearch, min_letters):
     # Getting wordsearch (from list of strings divided by space) into usable array
     wordsearchmatrix = wordsearch.split(" ")
-    strings_set = wordsearch_strings_set(wordsearchmatrix)
+    strings_set = wordsearch_strings_set(wordsearchmatrix, min_letters)
     english_vocab = set(w.lower() for w in nltk.corpus.words.words())
     solutions = english_vocab.intersection(strings_set)
     return solutions
@@ -223,9 +227,9 @@ def win_wordsearch_multi(searchwords, wordsearch):
     return dictionary
 
 # PART 3 - The End
-def solve_wordsearch(wordsearch):
-    solutions = realsolutions(wordsearch)
+def solve_wordsearch(wordsearch, min_letters):
+    solutions = realsolutions(wordsearch, min_letters)
     solved = win_wordsearch_multi(solutions, wordsearch)
     return solved
 
-answers = solve_wordsearch(wordsearch)
+answers = solve_wordsearch(wordsearch, 7)
