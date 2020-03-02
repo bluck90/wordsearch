@@ -23,6 +23,7 @@ import nltk.corpus.reader.wordlist as words
 
 english_vocab = set(w.lower() for w in words())
 
+import nltk
 english_vocab = set(w.lower() for w in nltk.corpus.words.words())
 
 
@@ -41,6 +42,8 @@ matrix = wordsearch.split()
 
 my_set = {1, 2, 3}
 print(my_set)
+
+
 
 for line in matrix:
     for letter in line:
