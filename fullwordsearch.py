@@ -5,14 +5,22 @@ Created on Thu Feb 27 16:43:22 2020
 @author: btgl1e14
 """
 
+"""
+Algorithm to find all possible English solutions to a wordsearch and return a dict containing each word and its coordinates.
+
+The input should be a single string with each line of the wordsearch separated by a space. Not particularly attractive but the code could easily be modified for a different input format.
+
+Didn't really know what I was doing when I began this so there is probably a lot of inefficiency in the code, but it does give the desired result.
+
+Output coordinates are back-to-front and upside down because of the way I was thinking of the wordsearch at the time (my coordinates go up, then along), but it should be relatively explanatory. Easy enough to fix if required.
+"""
+
 import numpy as np
 import nltk
 import copy
 
+# sample input I used, else randomwordsearchgenerator.py can generate random wordsearches.
 wordsearch = 'soiuatatuseocm ctdaotinahtaua roiuetnasievfn ucncoceuafmaau oaafkestgmoeam vtituidmrdaori atgcdsnurklrds litgngislksuvs fsifhfaoeoamai rhiekiluncrkro fvrriaiasttfkn edssrihacitnmo rovalfegutenoa iudceusoerseud'
-
-ws = wordsearch.split(' ')
-st = ["doggo", "oogod", "godgo"]
 
 # PART 1 - Find all English words in wordsearch
 
@@ -109,7 +117,7 @@ def diagonal_strings_up_left(wordsearch):
     return strings
 
 # combining all and making into set  with minimum number of letters per word
-def wordsearch_strings_set(wordsearch, num_letters):
+def wordsearch_strings_set(wordsearch, min_letters):
     forwards = wordsearch
     backwards =  reverse_strings(forwards)
     upwards = upwards_strings(wordsearch)     
@@ -120,7 +128,7 @@ def wordsearch_strings_set(wordsearch, num_letters):
     downright = reverse_strings(upleft)    
     strings = forwards + backwards + upwards + downwards + upright + downleft + upleft + downright  
     # separates the strings into strings of 3 or more letters
-    strings_set = {strings[h][i:j+i] for h in range(0, len(strings)) for j in range(num_letters,len(strings[h])+1) for i in range(0, (len(strings[h])+1)-j)}
+    strings_set = {strings[h][i:j+i] for h in range(0, len(strings)) for j in range(min_letters,len(strings[h])+1) for i in range(0, (len(strings[h])+1)-j)}
     return strings_set
 
 # Find real words in the string set
@@ -232,4 +240,4 @@ def solve_wordsearch(wordsearch, min_letters):
     solved = win_wordsearch_multi(solutions, wordsearch)
     return solved
 
-answers = solve_wordsearch(wordsearch, 7)
+answers = solve_wordsearch(wordsearch, 5)
