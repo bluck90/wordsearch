@@ -2,25 +2,23 @@
 """
 Created on Thu Feb 27 16:43:22 2020
 
-@author: btgl1e14
-"""
+@author: bluck90
 
-"""
 Algorithm to find all possible English solutions to a wordsearch and return a dict containing each word and its coordinates.
 
-The input should be a single string with each line of the wordsearch separated by a space. Not particularly attractive but the code could easily be modified for a different input format.
+The input should be a single string with each line of the wordsearch separated by a space. Not particularly attractive but the code could easily be modified for a different input format. UPDATED just use the random wordsearch generator.
 
 Didn't really know what I was doing when I began this so there is probably a lot of inefficiency in the code, but it does give the desired result.
 
-Output coordinates are back-to-front and upside down because of the way I was thinking of the wordsearch at the time (my coordinates go up, then along), but it should be relatively explanatory. Easy enough to fix if required.
+Output coordinates are wrong way round because of the way I was thinking of the wordsearch at the time (my coordinates go up, then along), but it should be relatively explanatory. Easy enough to fix if required. To some extent it doesn't matter, just means the wordsearch would be flipped etc.'
 """
 
 import numpy as np
 import nltk
 import copy
 
-# sample input I used, else randomwordsearchgenerator.py can generate random wordsearches.
-wordsearch = 'soiuatatuseocm ctdaotinahtaua roiuetnasievfn ucncoceuafmaau oaafkestgmoeam vtituidmrdaori atgcdsnurklrds litgngislksuvs fsifhfaoeoamai rhiekiluncrkro fvrriaiasttfkn edssrihacitnmo rovalfegutenoa iudceusoerseud'
+# sample input I used when I began. Use the wordsearch_rand_weighted function instead
+#wordsearch = 'soiuatatuseocm ctdaotinahtaua roiuetnasievfn ucncoceuafmaau oaafkestgmoeam vtituidmrdaori atgcdsnurklrds litgngislksuvs fsifhfaoeoamai rhiekiluncrkro fvrriaiasttfkn edssrihacitnmo rovalfegutenoa iudceusoerseud'
 
 # PART 1 - Find all English words in wordsearch
 
@@ -240,4 +238,79 @@ def solve_wordsearch(wordsearch, min_letters):
     solved = win_wordsearch_multi(solutions, wordsearch)
     return solved
 
-answers = solve_wordsearch(wordsearch, 5)
+
+# APPENDIX 1 - Printing Wordsearch
+
+# For printing the wordsearch in the console in a readable way
+def print_wordsearch(wordsearch):
+    wordsearchmatrix = wordsearch.split(" ")
+    for line in reversed(wordsearchmatrix):
+        spaced_line = ''
+        for letter in line:
+            spaced_line = spaced_line + letter + " "
+        print(spaced_line)
+
+# For printing the wordsearch in the console in a readable way with my dumb inverted coords (y then x)
+def print_coorded_wordsearch(wordsearch):
+    wordsearchmatrix = wordsearch.split(" ")
+    i = len(wordsearchmatrix) - 1
+    for line in reversed(wordsearchmatrix):
+        if i < 10:
+            spaced_line = str(i) + " "
+        else:
+            spaced_line = str(i)
+        for letter in line:
+            spaced_line = spaced_line + letter + " "
+        print(spaced_line)
+        i = i - 1
+    spaced_line = "  "
+    for i, letter in enumerate(wordsearchmatrix[0]):
+        if i < 9:
+            spaced_line = spaced_line + str(i) + " "
+        else:
+            spaced_line = spaced_line + str(i)
+    print(spaced_line)
+    
+# APPENDIX 2 - Generating Random Wordsearches
+
+import random
+import string
+
+def rand(n):
+  alphabet = string.ascii_lowercase
+  return ''.join(random.choice(alphabet) for i in range(n))
+
+def wordsearch_rand(height, width):
+    wordsearch = ''
+    for i in range(1, height + 1):
+        line = rand(width)
+        wordsearch = wordsearch + line + ' '
+    # slice removes the last space
+    return wordsearch[:-1]
+
+# To return wordsearches with higher likelihood of English words RECOMMENDED
+def rand_weighted(n):
+    alphabet = "etaoinshrdlcumwfgypbvkjxqz"
+    alphabet_letters = [] 
+    alphabet_letters[:0] = alphabet 
+    # Weights taken from https://en.wikipedia.org/wiki/Letter_frequency
+    choice = random.choices(alphabet_letters, 
+                            weights = [0.12702, 0.09056, 0.08167, 0.07507, 0.06966, 0.06749, 0.06327, 0.06094, 0.05987, 0.04253, 0.04025, 0.02782, 0.02758, 0.02406, 0.0236, 0.02228, 0.02015, 0.01974, 0.01929, 0.01492, 0.00978, 0.00772, 0.00153, 0.0015, 0.00095, 0.00074], 
+                            k = n)
+    choicelist = ''.join(choice)
+    return choicelist
+
+def wordsearch_rand_weighted(height, width):
+    wordsearch = ''
+    for i in range(1, height + 1):
+        line = rand_weighted(width)
+        wordsearch = wordsearch + line + ' '
+    # slice removes the last space
+    return wordsearch[:-1]
+
+wordsearch = wordsearch_rand_weighted(45,45)
+print_coorded_wordsearch(wordsearch)
+
+
+answers = solve_wordsearch(wordsearch, 7)
+
