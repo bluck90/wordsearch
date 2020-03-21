@@ -270,6 +270,29 @@ def print_coorded_wordsearch(wordsearch):
         else:
             spaced_line = spaced_line + str(i)
     print(spaced_line)
+
+# For use if you want to save the wordsearch as a variable (string). The coords don't really work past 99.
+def save_coorded_wordsearch(wordsearch):
+    wordsearchmatrix = wordsearch.split(" ")
+    i = len(wordsearchmatrix) - 1
+    wordplot = ""
+    for line in reversed(wordsearchmatrix):
+        if i < 10:
+            spaced_line = str(i) + " "
+        else:
+            spaced_line = str(i)
+        for letter in line:
+            spaced_line = spaced_line + letter + " "
+        wordplot = wordplot + "\n" + spaced_line
+        i = i - 1
+    spaced_line = "  "
+    for i, letter in enumerate(wordsearchmatrix[0]):
+        if i < 9:
+            spaced_line = spaced_line + str(i) + " "
+        else:
+            spaced_line = spaced_line + str(i)
+    wordplot = wordplot + "\n" + spaced_line
+    return wordplot
     
 # APPENDIX 2 - Generating Random Wordsearches
 
@@ -308,9 +331,22 @@ def wordsearch_rand_weighted(height, width):
     # slice removes the last space
     return wordsearch[:-1]
 
+# Running the algorithms
+
 wordsearch = wordsearch_rand_weighted(45,45)
 print_coorded_wordsearch(wordsearch)
 
 
-answers = solve_wordsearch(wordsearch, 7)
+answers = solve_wordsearch(wordsearch, 6)
+
+
+
+
+
+
+
+
+
+
+
 
